@@ -6,6 +6,29 @@ public class Client {
     private String email;
 
     private Pet pet;
+    @Override
+    public String toString() {
+        return "Client {"
+                + "\n\tfirstName = " + firstName
+                + ", lastName = " + lastName
+                + ", email = " + email
+                + ",\n\tpet = " + pet
+                + "\n}";
+
+        public boolean equals(Object object) {
+            if (this == object) return true;
+            if (object == null || getClass() != object.getClass()) return false;
+            if (!super.equals(object)) return false;
+            Client client = (Client) object;
+            return java.util.Objects.equals(firstName, client.firstName)
+                    && java.util.Objects.equals(lastName, client.lastName)
+                    && java.util.Objects.equals(email, client.email)
+                    && java.util.Objects.equals(pet, client.pet);
+        }
+
+        public int hashCode() {
+            return java.util.Objects.hash(super.hashCode(), firstName, lastName, email, pet);
+        }
 
     public void setFirstName(String firstName) {
         this.firstName = firstName;
@@ -39,3 +62,5 @@ public class Client {
         this.pet = pet;
     }
 }
+
+

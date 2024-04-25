@@ -1,0 +1,129 @@
+Index: src/main/java/com/magicvet/model/Client.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package main.java.com.magicvet.model;\r\n\r\npublic class Client {\r\n    private String firstName;\r\n    private String lastName;\r\n    private String email;\r\n\r\n    private Pet pet;\r\n\r\n    public void setFirstName(String firstName) {\r\n        this.firstName = firstName;\r\n    }\r\n\r\n    public String getFirstName() {\r\n        return firstName;\r\n    }\r\n\r\n    public void setLastName(String lastName) {\r\n        this.lastName = lastName;\r\n    }\r\n\r\n    public String getLastName() {\r\n        return lastName;\r\n    }\r\n\r\n    public void setEmail(String email) {\r\n        this.email = email;\r\n    }\r\n\r\n    public String getEmail() {\r\n        return email;\r\n    }\r\n\r\n    public Pet getPet() {\r\n        return pet;\r\n    }\r\n\r\n    public void setPet(Pet pet) {\r\n        this.pet = pet;\r\n    }\r\n}\r\n
+===================================================================
+diff --git a/src/main/java/com/magicvet/model/Client.java b/src/main/java/com/magicvet/model/Client.java
+--- a/src/main/java/com/magicvet/model/Client.java	
++++ b/src/main/java/com/magicvet/model/Client.java	
+@@ -1,5 +1,7 @@
+ package main.java.com.magicvet.model;
+ 
++import java.util.Objects;
++
+ public class Client {
+     private String firstName;
+     private String lastName;
+@@ -7,6 +9,32 @@
+ 
+     private Pet pet;
+ 
++    @Override
++    public String toString() {
++        return "Client {"
++                + "\n\tfistName = " + firstName
++                + ", lastName = " + lastName
++                + ", email = " + email
++                + "\n\tpet = " + pet
++                + "\n}";
++    }
++
++    @Override
++    public boolean equals(Object o) {
++        if (this == o) return true;
++        if (o == null || getClass() != o.getClass()) return false;
++        Client client = (Client) o;
++        return Objects.equals(firstName, client.firstName)
++                && Objects.equals(lastName, client.lastName)
++                && Objects.equals(email, client.email)
++                && Objects.equals(pet, client.pet);
++    }
++
++    @Override
++    public int hashCode() {
++        return Objects.hash(firstName, lastName, email, pet);
++    }
++
+     public void setFirstName(String firstName) {
+         this.firstName = firstName;
+     }
+Index: src/main/java/com/magicvet/service/PetService.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package main.java.com.magicvet.service;\r\n\r\nimport main.java.com.magicvet.Main;\r\nimport main.java.com.magicvet.model.Dog;\r\nimport main.java.com.magicvet.model.Pet;\r\n\r\nimport java.lang.reflect.Type;\r\n\r\npublic class PetService {\r\n    private static String DOG_TYPE = \"dog\";\r\n\r\n    public Pet registerNewPet() {\r\n        Pet pet = new Pet();\r\n        System.out.print(\"Type (dog / cat / other): \");\r\n        String type = Main.SCANNER.nextLine();\r\n\r\n        if (DOG_TYPE.equals(type)){\r\n            pet = buildDog();\r\n        } else {\r\n            pet = buildPet(type);\r\n        }\r\n        return pet;\r\n    }\r\n\r\n    private Dog buildDog() {\r\n        Pet pet = buildPet(DOG_TYPE);\r\n        Dog dog = petToDog(pet);\r\n\r\n        System.out.println(\"Size (xS / S / M / L / xxL): \");\r\n        dog.setSize(Main.SCANNER.nextLine());\r\n        return dog;\r\n    }\r\n\r\n    private Dog petToDog(Pet pet) {\r\n        Dog dog = new Dog();\r\n        dog.setAge(pet.getAge());\r\n        dog.setName(pet.getName());\r\n        dog.setSex(pet.getSex());\r\n\r\n        return dog;\r\n    }\r\n\r\n    private Pet buildPet(String type) {\r\n        Pet pet = new Pet();\r\n        pet.setType(type);\r\n\r\n        System.out.print(\"Age: \");\r\n        pet.setAge(Main.SCANNER.nextLine());\r\n\r\n        System.out.print(\"Name: \");\r\n        pet.setName(Main.SCANNER.nextLine());\r\n\r\n        System.out.print(\"Sex (male / female)\");\r\n        pet.setSex(Main.SCANNER.nextLine());\r\n\r\n        return pet;\r\n    }\r\n\r\n\r\n}\r\n
+===================================================================
+diff --git a/src/main/java/com/magicvet/service/PetService.java b/src/main/java/com/magicvet/service/PetService.java
+--- a/src/main/java/com/magicvet/service/PetService.java	
++++ b/src/main/java/com/magicvet/service/PetService.java	
+@@ -7,7 +7,7 @@
+ import java.lang.reflect.Type;
+ 
+ public class PetService {
+-    private static String DOG_TYPE = "dog";
++    private static final String DOG_TYPE = "dog";
+ 
+     public Pet registerNewPet() {
+         Pet pet = new Pet();
+Index: src/main/java/com/magicvet/component/Authenticator.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package main.java.com.magicvet.component;\r\n\r\nimport main.java.com.magicvet.Main;\r\n\r\npublic class Authenticator {\r\n    private static String PASSWORD = \"d\";\r\n\r\n    public static boolean auth() {\r\n        boolean accepted = false;\r\n        for (int i = 0; i < 3; i++){\r\n            System.out.print(\"Password: \");\r\n            String input = Main.SCANNER.nextLine();\r\n\r\n            if (PASSWORD.equals(input)){\r\n                accepted = true;\r\n                break;\r\n            } else {\r\n                System.out.println(\"Access denied. Please check your password.\");\r\n            }\r\n        }\r\n\r\n        System.out.println(accepted ? \"Welcome to the Magic Vet!\" : \"Application has been blocked.\");\r\n\r\n        return accepted;\r\n    }\r\n}\r\n
+===================================================================
+diff --git a/src/main/java/com/magicvet/component/Authenticator.java b/src/main/java/com/magicvet/component/Authenticator.java
+--- a/src/main/java/com/magicvet/component/Authenticator.java	
++++ b/src/main/java/com/magicvet/component/Authenticator.java	
+@@ -3,7 +3,7 @@
+ import main.java.com.magicvet.Main;
+ 
+ public class Authenticator {
+-    private static String PASSWORD = "d";
++    private static final String PASSWORD = "d";
+ 
+     public static boolean auth() {
+         boolean accepted = false;
+Index: src/main/java/com/magicvet/service/ClientService.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package main.java.com.magicvet.service;\r\n\r\nimport main.java.com.magicvet.Main;\r\nimport main.java.com.magicvet.model.Client;\r\n\r\nimport java.util.regex.Matcher;\r\nimport java.util.regex.Pattern;\r\n\r\npublic class ClientService {\r\n  private static String Email_PATTERN = \"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\\\.[a-zA-Z]{2,}$\";\r\n   public Client registerNewClient() {\r\n       Client client = null;\r\n        System.out.println(\"Please provide client details\");\r\n        System.out.print(\"Email: \");\r\n        String email = Main.SCANNER.nextLine();\r\n\r\n        if (isEmailValid(email)){\r\n           client = buildClient(email);\r\n            System.out.println(\"New client: \" + client.getFirstName() + \" \"\r\n                    + client.getLastName() + \" (\"\r\n                    +client.getEmail() + \")\");\r\n        } else {\r\n            System.out.println(\"Provided email is invalid.\");\r\n        }\r\n        return client;\r\n    }\r\n\r\n   private static Client buildClient(String email) {\r\n        Client client = new Client();\r\n        client.setEmail(email);\r\n\r\n        System.out.print(\"First name: \");\r\n        client.setFirstName(Main.SCANNER.nextLine());\r\n\r\n        System.out.print(\"Last name: \");\r\n        client.setLastName(Main.SCANNER.nextLine());\r\n\r\n        return client;\r\n    }\r\n\r\n   private static boolean isEmailValid(String email) {\r\n        Pattern pattern = Pattern.compile(Email_PATTERN);\r\n        Matcher matcher = pattern.matcher(email);\r\n        return matcher.matches();\r\n    }\r\n}\r\n\r\n
+===================================================================
+diff --git a/src/main/java/com/magicvet/service/ClientService.java b/src/main/java/com/magicvet/service/ClientService.java
+--- a/src/main/java/com/magicvet/service/ClientService.java	
++++ b/src/main/java/com/magicvet/service/ClientService.java	
+@@ -7,7 +7,7 @@
+ import java.util.regex.Pattern;
+ 
+ public class ClientService {
+-  private static String Email_PATTERN = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$";
++  private static final String Email_PATTERN = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$";
+    public Client registerNewClient() {
+        Client client = null;
+         System.out.println("Please provide client details");
+Index: src/main/java/com/magicvet/component/ApplicationRunner.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package main.java.com.magicvet.component;\r\n\r\nimport main.java.com.magicvet.model.Client;\r\nimport main.java.com.magicvet.model.Pet;\r\nimport main.java.com.magicvet.service.ClientService;\r\nimport main.java.com.magicvet.service.PetService;\r\n\r\npublic class ApplicationRunner {\r\n    private ClientService clientService = new ClientService();\r\n\r\n    private PetService petService = new PetService();\r\n    public void run() {\r\n        if (Authenticator.auth()) {\r\n          Client client = clientService.registerNewClient();\r\n\r\n          if (client != null) {\r\n              System.out.println(\"Adding a new pet.\");\r\n\r\n             Pet pet = petService.registerNewPet();\r\n\r\n             client.setPet(pet);\r\n             pet.setOwnerName(client.getFirstName() + \" \" + client.getLastName());\r\n              System.out.println(\"Pet has been added.\");\r\n          }\r\n        }\r\n    }\r\n}\r\n
+===================================================================
+diff --git a/src/main/java/com/magicvet/component/ApplicationRunner.java b/src/main/java/com/magicvet/component/ApplicationRunner.java
+--- a/src/main/java/com/magicvet/component/ApplicationRunner.java	
++++ b/src/main/java/com/magicvet/component/ApplicationRunner.java	
+@@ -6,9 +6,9 @@
+ import main.java.com.magicvet.service.PetService;
+ 
+ public class ApplicationRunner {
+-    private ClientService clientService = new ClientService();
++    private final ClientService clientService = new ClientService();
+ 
+-    private PetService petService = new PetService();
++    private final PetService petService = new PetService();
+     public void run() {
+         if (Authenticator.auth()) {
+           Client client = clientService.registerNewClient();
+@@ -21,6 +21,8 @@
+              client.setPet(pet);
+              pet.setOwnerName(client.getFirstName() + " " + client.getLastName());
+               System.out.println("Pet has been added.");
++
++              System.out.println(client);
+           }
+         }
+     }
